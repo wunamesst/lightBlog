@@ -4,16 +4,18 @@ import (
 	"runtime"
 	"path"
 	"github.com/gin-gonic/gin"
-	"fmt"
 	"lightBlog/controller"
+	"lightBlog/library/util"
 )
 
-var CfgPath,UtilPath,ViewPath string
+var (
+	CfgPath, ViewPath string
+)
 
 func main() {
 	Init()
 
-	CreateServ()
+	CreateServer()
 }
 
 //初始化公用变量、常量等
@@ -21,21 +23,22 @@ func Init() {
 	_, filename, _, _ := runtime.Caller(0)
 	BasePath := path.Dir(filename)
 
-	CfgPath  = path.Join(BasePath, "/config")
-	UtilPath = path.Join(BasePath, "/util")
-	ViewPath = path.Join(BasePath, "/view")
+	CfgPath = path.Join(BasePath, "/config/")
+	ViewPath = path.Join(BasePath, "/view/")
 
-	fmt.Println(ViewPath)
-
+	util.Debug(ViewPath)
 }
 
 //创建服务器
-func CreateServ() {
+func CreateServer() {
 	server := gin.Default()
 
+	//访问/static时，资源指向static路径
 	server.Static("/static", "./static")
+	//模块加载路径
 	server.LoadHTMLGlob(ViewPath + "/*")
 
+	//路由定义
 	server.GET("/", controller.Index)
 
 	server.Run(":8080")

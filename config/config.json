@@ -1,0 +1,10 @@
+{
+  "Host": ":8080",
+  "MySQL": {
+    "Host": "127.0.0.1",
+    "Port": 3306,
+    "Username": "",
+    "Password": "",
+    "Database": "lightBlog"
+  }
+}

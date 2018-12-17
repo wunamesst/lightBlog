@@ -1,12 +1,10 @@
-package util
+package helper
 
 import (
 	"log"
 	"fmt"
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func CheckFatalError(title string, e error) {
@@ -28,7 +26,4 @@ func Md5(str string) string {
 	return hex.EncodeToString(cipherStr)
 }
 
-//渲染模板
-func Display(c *gin.Context, templateName string, data interface{}) {
-	c.HTML(http.StatusOK, templateName, data)
-}
+

@@ -2,9 +2,12 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"lightBlog/library/util"
 )
 
 func Index(c *gin.Context) {
-	util.Display(c, "index.html", nil)
+	display(c, "frontend/index.html", nil)
+}
+
+func AdminIndex(c *gin.Context) {
+	display(c, "admin/index.html", nil)
 }

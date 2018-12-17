@@ -5,7 +5,6 @@ import (
 	"github.com/go-xorm/xorm"
 	_ "github.com/go-sql-driver/mysql"
 
-	"runtime"
 	"path"
 	"io/ioutil"
 	"encoding/json"
@@ -16,6 +15,9 @@ import (
 	"lightBlog/global"
 	"time"
 	"lightBlog/model"
+	"runtime"
+	"path/filepath"
+	"lightBlog/library/helper"
 )
 
 func main() {
@@ -27,41 +29,39 @@ func main() {
 
 //初始化公用变量、常量等
 func InitCommonPath() {
-	_, filename, _, _ := runtime.Caller(0)
-	BasePath := path.Dir(filename)
-
-	global.CfgPath = path.Join(BasePath, "/config")
-	global.ViewPath = path.Join(BasePath, "/view")
+	global.CfgPath = path.Join(GetBasePath(), "./config")
+	global.ViewPath = path.Join(GetBasePath(), "./view")
 }
 
 //创建服务器
 func InitServer() {
-	server := gin.Default()
+	gin.SetMode(gin.DebugMode)
+	router := gin.Default()
 
 	//访问/static时，资源指向static路径
-	server.Static("/static", "./static")
-	//模块加载路径
-	server.LoadHTMLGlob(global.ViewPath + "/*")
+	router.Static("/static", "./static")
 	//自动恢复
-	server.Use(gin.Recovery())
+	//router.Use(gin.Recovery())
 
+	//模块加载路径
+	util.SetTempates(router)
 	//路由定义
-	server.GET("/", controller.Index)
+	router.GET("/", controller.Index)
+	router.GET("/admin", controller.AdminIndex)
 
-	server.Run(global.Config.Host)
+	router.Run(global.Config.Host)
 }
 
 //初始化数据库连接
 func InitDatabase() {
-	util.Debug(global.CfgPath)
+	helper.Debug(global.CfgPath)
 	bt, e := ioutil.ReadFile(global.CfgPath + "/config.json")
-	util.CheckFatalError("读取配置文件错误", e)
+	helper.CheckFatalError("读取配置文件错误", e)
 
 	e = json.Unmarshal(bt, &global.Config)
-	util.CheckFatalError("配置文件格式错误", e)
+	helper.CheckFatalError("配置文件格式错误", e)
 
 	//连接数据库
-	util.Debug(global.Config.MySQL.Host)
 	global.DB, e = xorm.NewEngine("mysql",
 		fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8",
 			global.Config.MySQL.Username,
@@ -69,7 +69,7 @@ func InitDatabase() {
 			global.Config.MySQL.Host,
 			global.Config.MySQL.Port,
 			global.Config.MySQL.Database))
-	util.CheckFatalError("连接数据库错误", e)
+	helper.CheckFatalError("连接数据库错误", e)
 
 	global.DB.DatabaseTZ = time.Local
 	//global.DB.SetMapper(core.SnakeMapper{})
@@ -77,7 +77,7 @@ func InitDatabase() {
 	global.DB.ShowExecTime(true)
 
 	e = global.DB.Ping()
-	util.CheckFatalError("数据库连接丢失", e)
+	helper.CheckFatalError("数据库连接丢失", e)
 }
 
 //测试安装
@@ -88,5 +88,20 @@ func Install() {
 
 	global.DB.DropTables(tables...)
 	e := global.DB.Sync2(tables...)
-	util.CheckFatalError("创建数据库失败", e)
+	helper.CheckFatalError("创建数据库失败", e)
+}
+
+//加载模板
+func setTemplate(engine *gin.Engine) {
+	//设置模板定界符，默认是{{ }}
+	//engine.Delims("{{", "}}")
+	engine.LoadHTMLGlob(filepath.Join(global.ViewPath, "./**/*"))
+}
+
+//项目路径
+func GetBasePath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := path.Dir(filename)
+
+	return basePath
 }

@@ -7,7 +7,6 @@ package gin
 import (
 	"crypto/subtle"
 	"encoding/base64"
-	"net/http"
 	"strconv"
 )
 
@@ -52,7 +51,7 @@ func BasicAuthForRealm(accounts Accounts, realm string) HandlerFunc {
 		if !found {
 			// Credentials doesn't match, we return 401 and abort handlers chain.
 			c.Header("WWW-Authenticate", realm)
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatus(401)
 			return
 		}
 

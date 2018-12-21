@@ -91,13 +91,6 @@ func Install() {
 	helper.CheckFatalError("创建数据库失败", e)
 }
 
-//加载模板
-func setTemplate(engine *gin.Engine) {
-	//设置模板定界符，默认是{{ }}
-	//engine.Delims("{{", "}}")
-	engine.LoadHTMLGlob(filepath.Join(global.ViewPath, "./**/*"))
-}
-
 //项目路径
 func GetBasePath() string {
 	_, filename, _, _ := runtime.Caller(0)

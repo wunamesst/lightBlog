@@ -7,7 +7,3 @@ import (
 func Index(c *gin.Context) {
 	display(c, "frontend/index.html", nil)
 }
-
-func AdminIndex(c *gin.Context) {
-	display(c, "admin/index.html", nil)
-}

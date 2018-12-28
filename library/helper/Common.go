@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"crypto/md5"
 	"encoding/hex"
+	"time"
 )
 
 func CheckFatalError(title string, e error) {
@@ -26,4 +27,6 @@ func Md5(str string) string {
 	return hex.EncodeToString(cipherStr)
 }
 
-
+func GetCurrentDate() string {
+	return time.Now().Format("2006-01-02 15:04:05")
+}

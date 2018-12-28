@@ -14,9 +14,7 @@ import (
 	"lightBlog/library/util"
 	"lightBlog/global"
 	"time"
-	"lightBlog/model"
 	"runtime"
-	"path/filepath"
 	"lightBlog/library/helper"
 )
 
@@ -47,7 +45,10 @@ func InitServer() {
 	util.SetTempates(router)
 	//路由定义
 	router.GET("/", controller.Index)
-	router.GET("/admin", controller.AdminIndex)
+	router.GET("/admin/index", controller.AdminIndex)
+	router.GET("/admin/posts", controller.AdminPostsGet)
+
+	router.POST("/admin/posts", controller.AdminPostsPost)
 
 	router.Run(global.Config.Host)
 }
@@ -83,7 +84,9 @@ func InitDatabase() {
 //测试安装
 func Install() {
 	var tables = []interface{}{
-		new(model.BlogAdmin),
+		//new(model.BlogAdmin),
+		//new(model.BlogPost),
+		//new(model.BlogTag),
 	}
 
 	global.DB.DropTables(tables...)

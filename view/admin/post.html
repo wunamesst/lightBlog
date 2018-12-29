@@ -1,7 +1,7 @@
 {{define "admin/post.html"}}
-{{template "header.html"}}
+{{template "header.html" .}}
 
-    <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Content Preview</label>
-                                    <div class="form-control post-preview" placeholder="Enter ..." readonly="readonly">asdfa</div>
+                                    <div class="form-control post-preview" readonly="readonly"></div>
                                 </div>
 
                                 <div class="box-body">

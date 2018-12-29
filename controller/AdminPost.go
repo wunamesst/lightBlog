@@ -8,7 +8,11 @@ import (
 )
 
 func AdminPostsGet(c *gin.Context) {
-	display(c, "admin/post.html", nil)
+	customStyle := []string{"posts.css"}
+
+	display(c, "admin/post.html", gin.H{
+		"customStyle": customStyle,
+	})
 }
 
 func AdminPostsPost(c *gin.Context) {

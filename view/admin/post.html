@@ -59,11 +59,11 @@
                                 <!-- content -->
                                 <div class="form-group">
                                     <label>Content</label>
-                                    <textarea class="form-control content" rows="3" placeholder="Enter ..." name="content"></textarea>
+                                    <textarea class="form-control post-content" rows="3" placeholder="Enter ..." name="content"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Content Preview</label>
-                                    <div class="form-control preview" placeholder="Enter ..." readonly="readonly">asdfa</div>
+                                    <div class="form-control post-preview" placeholder="Enter ..." readonly="readonly">asdfa</div>
                                 </div>
 
                                 <div class="box-body">
@@ -86,12 +86,12 @@
 <script type="text/javascript" src="../../static/components/showdown/showdown.min.js"></script>
 <script>
     $(function () {
-        $('.content').on('keyup', function () {
+        $('.post-content').on('keyup', function () {
             var text = $(this).val();
             var converter = new showdown.Converter();
             var html = converter.makeHtml(text);
 
-            $('div.preview').html(html);
+            $('.post-preview').html(html);
         });
     });
 </script>

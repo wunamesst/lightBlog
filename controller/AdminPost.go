@@ -5,8 +5,10 @@ import (
 	"lightBlog/library/helper"
 	"lightBlog/model"
 	. "lightBlog/global"
+	"html/template"
 )
 
+//添加文章页面
 func AdminPostsGet(c *gin.Context) {
 	customStyle := []string{"posts.css"}
 
@@ -15,11 +17,12 @@ func AdminPostsGet(c *gin.Context) {
 	})
 }
 
+//提交文章内容
 func AdminPostsPost(c *gin.Context) {
 	var postData struct {
 		Title   string `form:"title" binding:"required"`
 		Tag     string `form:"tag" binding:""`
-		Content string `form:"content" binding:"required"`
+		Content string `form:"content_html" binding:"required"`
 		Status  int `form:"status" binding:"required"`
 		Author  string `form:"author" binding:""`
 	}
@@ -31,7 +34,7 @@ func AdminPostsPost(c *gin.Context) {
 
 	post := &model.BlogPost{
 		Title: postData.Title,
-		Content: postData.Content,
+		Content: template.HTMLEscapeString(postData.Content),
 		Status: postData.Status,
 		Author: postData.Author,
 		CreateAt: helper.GetCurrentDate(),
